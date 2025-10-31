@@ -163,7 +163,7 @@ From this bulk of the posterior mass, 5 evenly spaced draws are selected and the
 
 The notebook `parameter_recovery_simulation_BAYES.ipynb` loads in behavioural data in order to obtain the payoffs from each participants walks. Simulations are run using stan (`./Stan/stan_simulations/`) and we make 15 simulations per participant: 3 repeats of each of the K=5 samples from the posterior. 
 
-The simulated daya are stored in `./simulated_data/YYYY-MM-DD-HH-MM-SS-simulations` and within this the stan `.csv`s are stored in directories as in a top level struct `simulations_stan_struct.mat` and there is a matplotlib plotting function at the end of the notebook if needed. 
+The simulated data are stored in `./simulated_data/YYYY-MM-DD-HH-MM-SS-simulations` and within this the stan `.csv`s are stored in directories as in a top level struct `simulations_stan_struct.mat` and there is a matplotlib plotting function at the end of the notebook if needed. 
 
 **Simulated Behavioural Data Fitting**
 
@@ -175,7 +175,8 @@ We used empirical Bayes (not hierarchical) with priors taken from the distributi
 Here, fits are in  `fits/[group]/[model]/[subject]` and as before fits are written out as `.csv`  into `fits/[group]/[model]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv` so e.g. `AlphaSME_model-20251009150541_4.csv` is the 4th chain of one of our runs. 
 Again; if you run the fits and abort mid run, there may be extra csvs in `fits/[group]/[model]/` that could cause issues in the postprocessing code. 
 
+`parameter_recovery_formatting.ipynb` formats the `.csv` stan fits for MATLAB and are saved as `parameter_recovery_draws.mat`. 
 
-We then load into `paramter_recovery_formatting.ipynb` to load into a MATLAB struct, `parameter_recovery_draws.mat`. 
+`simulations_stan_struct.mat` and `parameter_recovery_draws.mat` are loaded into MATLAB using `parametter_recovery.m` which calculates the means and the HDI for each simulated parameter; storing this in `param_recovery_summary_stats.mat`. There is a plotting file (CHatGPT generated) to check these in `plot_param_recovery.m`, 
 
 
