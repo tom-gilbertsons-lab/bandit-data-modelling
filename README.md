@@ -110,7 +110,7 @@ As per Wilson & Collins 2019, have included the BIC (Bayes Information Criterion
 
 
 $$
-\textrm{BIC} = -2 \: \ln\hat{\mathscr{L}} + k \: \ln T
+\textrm{BIC} = -2 \ln\hat{\mathscr{L}} + k\ln T
 $$
 
 Where $\hat{\mathscr{L}}$ is the value of the log likelihood at the maximum likelihood estimate of the parameters $\hat{\theta}^{MLE}_m$, and $k$ the number of free paramters (penalised). 
