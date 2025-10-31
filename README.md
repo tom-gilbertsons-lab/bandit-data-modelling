@@ -110,9 +110,7 @@ As per Wilson & Collins 2019, have included the BIC (Bayes Information Criterion
 
 
 $$
-
 \textrm{BIC} = -2 \: \ln\hat{\mathscr{L}} + k \: \ln T
-
 $$
 
 Where $\hat{\mathscr{L}}$ is the value of the log likelihood at the maximum likelihood estimate of the parameters $\hat{\theta}^{MLE}_m$, and $k$ the number of free paramters (penalised). 
@@ -120,25 +118,19 @@ Where $\hat{\mathscr{L}}$ is the value of the log likelihood at the maximum like
 The Bayesian Evidence 
 
 $$ 
-
 E_m= \log \int d\theta_m p(d_{1:T}| \theta_m,m)p(\theta_m|m)
-
 $$ 
 
 is such that 
 
 $$
-
 \textrm{BIC} \approx -2 E_m
-
 $$
 
 And the likelihood-per-trial,
 
 $$
-
 LPT = \exp{\frac{E_m}{T}}
-
 $$
 
 Represents the average probability with which the model predicts each choice. 
