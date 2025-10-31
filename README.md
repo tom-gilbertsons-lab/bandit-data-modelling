@@ -55,11 +55,11 @@ See `./Fitting/fitting.ipynb` &  `./Fitting/analysis.ipynb`
 Reformats the behavioural data from concatenated `.csv` format as in [Gilmour et.al.](doi.org/10.1093/brain/awae025)\
 Compiles Stan models (for easy parallelisation using `joblib` modules each job needs its own instance of the executable) and each model is fitted (see `Stan/stan-models`):
 
-AlphaSM\ (Delta Rule)
+AlphaSM (Delta Rule)\
 AlphaSME (+ exploration)\
 AlphaSMP (+ perseveration)\
 AlphaSMEP (+ exploration & perseveration)\
-BayesSM\ (Kalman Filter)
+BayesSM (Kalman Filter)\
 BayesSME (+ exploration)\
 BayesSMP (+ perseveration)\
 BayesSMEP (+ exploration & perseveration)
@@ -107,25 +107,40 @@ As per Wilson & Collins 2019, have included the BIC (Bayes Information Criterion
 
 **Bayes Information Criterion (BIC)** (Appendix 2, Wilson & Collins 2019)
 
-$$
-\textrm{BIC} = -2 \: \log(\hat{\mathscr{L}}) + k\:\log(T)
+
+
 $$
 
-Where $\hat{\mathscr{L}}$ is the value of the log likelihood at the maximum likelihood estimate of the parameters $\hat{\theta}^{MLE}_m$, and $k$ the number of free paramters (which are penalised). 
+\textrm{BIC} = -2 \: \ln\hat{\mathscr{L}} + k \: \ln T
+
+$$
+
+Where $\hat{\mathscr{L}}$ is the value of the log likelihood at the maximum likelihood estimate of the parameters $\hat{\theta}^{MLE}_m$, and $k$ the number of free paramters (penalised). 
 
 The Bayesian Evidence 
+
 $$ 
+
 E_m= \log \int d\theta_m p(d_{1:T}| \theta_m,m)p(\theta_m|m)
+
 $$ 
+
 is such that 
+
 $$
-\textrm{BIC} \approx -2 \: \log(E_m)
+
+\textrm{BIC} \approx -2 E_m
+
 $$
 
 And the likelihood-per-trial,
+
 $$
+
 LPT = \exp{\frac{E_m}{T}}
+
 $$
+
 Represents the average probability with which the model predicts each choice. 
 
 
