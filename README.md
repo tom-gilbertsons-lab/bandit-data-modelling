@@ -2,7 +2,7 @@
 ## Review of Behavioural Modeling for Thalamotomy Oedema (July & Oct 2025) 
 #### Behavioural data modelling (splitting postop by site) 
 
-We jump between MATLAB and python ; `cmdPyStan` is used for modelling (wrapped in `.ipynb` notebooks, using `joblib` for parallelisation) and have used Arviz for initial checks (however MATLAB is standard in field so structs <--> dicts throughout). 
+We use MATLAB and python. `cmdPyStan` is used for modelling (wrapped in `.ipynb` notebooks, using `joblib` for parallelisation) and have used Arviz for initial checks (however MATLAB is standard in field so structs <--> dicts throughout). 
 
 The github repo won't have data in it (see the .gitignore); the OSF version does (over at XXXX). 
 
@@ -49,28 +49,31 @@ However stan code has been updated from pyStan to cmdPyStan (eg. array syntax) a
 `./Fitting/fitting.ipynb` reformats the behavioural data from concatenated `.csv` format as in [Gilmour et.al.](doi.org/10.1093/brain/awae025)\
 Compiles & fits Stan models (see `Stan/stan-models`):
 
-AlphaSM (Delta Rule)\
-AlphaSME (+ exploration)\
-AlphaSMP (+ perseveration)\
-AlphaSMEP (+ exploration & perseveration)\
-BayesSM (Kalman Filter)\
-BayesSME (+ exploration)\
-BayesSMP (+ perseveration)\
-BayesSMEP (+ exploration & perseveration)
+### Model Families and Free Parameters
+
+| Model        | Description                                | Free Parameters                  |
+|---------------|---------------------------------------------|----------------------------------|
+| **AlphaSM**   | Delta-rule learning                        | α (learning rate), β (inverse temperature) |
+| AlphaSME      | + Exploration term                         | α, β, φ (exploration)            |
+| AlphaSMP      | + Perseveration term                       | α, β, ρ (perseveration)          |
+| AlphaSMEP     | + Exploration & Perseveration              | α, β, φ, ρ                       |
+| **BayesSM**   | Kalman Filter learning                     | β (inverse temperature)          |
+| BayesSME      | + Exploration term                         | β, φ (exploration)               |
+| BayesSMP      | + Perseveration term                       | β, ρ (perseveration)             |
+| BayesSMEP     | + Exploration & Perseveration              | β, φ, ρ                          |
+
 
 All using 
 ```
-CHAINS= 4
-nWarmup = 2500
-nSamples = 2500
+CHAINS= 4 nWarmup = 2500 nSamples = 2500
 ```
 
-*(There are occasional divergent transitions in the fits; more commonly in the delta rule models but significantly fewer than in models from [Gilmour et.al.](doi.org/10.1093/brain/awae025). Addressing these was out of scope in this refit).*\
+*There are occasional divergent transitions in the fits; more commonly in the delta rule models, contact authors for details (addressing these was out of scope in this refit).*\
 `cmdPyStan` fits are written out as `.csv`  into `fits/[group]/[model]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv` so e.g. `AlphaSME_model-20251009150541_4.csv` is the 4th chain of one of our runs in early October 2025. 
 
-`./Fitting/analysis.ipynb` loads fits and converts to [Arviz](https://python.arviz.org/en/stable/) inference data objects for a quick check of posteriors and formats, then our paramters of interest are written out to MATLAB as `per_subject_draws.mat`. 
+`./Fitting/analysis.ipynb` loads fits and converts to [Arviz](https://python.arviz.org/en/stable/) inference data objects for a quick check of posteriors and formats. Parameters of interest are written out to MATLAB as `per_subject_draws.mat`. 
 
-If you run fits and abort mid run, or ran more than one fit without redirecting output, there may be extra csvs in `fits/[group]/[model]/` that could cause issues in the postprocessing code (and should just be removed from the given directory instead).
+If you run fits and abort mid run (or ran more than one fit without redirecting output), there may be extra csvs in `fits/[group]/[model]/` that could cause issues in the postprocessing code (so just remove from the directory given to `./Fitting/analysis.ipynb` instead).
 
 
 ## Model comparison  `./ModelComparison`
@@ -81,7 +84,7 @@ See `model_comparison.m` script and `model_comparisons.mat`; which contains seve
 
 ### Bayes Information Criterion and Liklihood Per Trial 
 
-After running though PSIS-LOO for model comparison (standard in the behavioural data modelling field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). 
+After running though PSIS-LOO for model comparison (standard in field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). 
 
          Group         k < p7    0.7< k < 1    k > 1
     _______________    ______    __________    _____
@@ -93,8 +96,8 @@ After running though PSIS-LOO for model comparison (standard in the behavioural 
     "PostTreat_Dun"       4          96         100 
 
 
-PSIS-LOO asks 'how well does each model predict unseen data better (without penalising for additional parameters)?'. But though Post-Op Dundee patients have different parameters, on average, than eg Healthy Controls; given our sample sizes and intrapatient variability a new post-op patient's parameters wouldn't be predictable from other post-op patients. So in our dataset we find PSIS-LOO gives almost all pareto k-values > 0.7 (also PSIS-LOO (& WAIC); both CV approximations, are very close to crude mean of the likelihoods- see `model_comparisons.mat`).   
-We don't need to ask LOO-CV (and can't, we don't have time to re run LOO-CV)- we are asking 'which model generated this data?' Or 'of the cognitive algorithms that are our best guess, when we offer them up to the data, which describes the data best?
+PSIS-LOO asks 'how well does each model predict unseen data better (without penalising for additional parameters)?'. But though Post-Op Dundee patients have different parameters, on average, than eg Healthy Controls; given our sample sizes and intrapatient variability a new post-op patient's parameters wouldn't be predictable from other post-op patients. So in our dataset we find PSIS-LOO gives almost all pareto k-values > 0.7 (also PSIS-LOO (& WAIC); both CV approximations, are very close to the simple mean of the likelihoods- see `model_comparisons.mat`).   
+We don't need to ask for a LOO-CV approximation (and we don't have time to re run LOO-CV)- we are asking 'which model generated this data?' Or 'of the cognitive algorithms that are our best guess, when we offer them up to the data, which describes the data best?
 
 As per Wilson & Collins 2019, have included the BIC (Bayes Information Criterion) and the LPT (Liklihood per trial) as suggested by the authoritative 'Ten Simple Rules....' https://doi.org/10.7554/eLife.49547 
 
@@ -155,9 +158,9 @@ The notebook `parameter_recovery_simulation_BAYES.ipynb` loads in behavioural da
 
 As before, we do parallelised stan fits in `parameter_recovery_fitting_BAYES.ipynb`. On our i9 24-core machine we can refit the 15 simulated sets from a single participant in approx, 25-45 minutes on the 4 cores (1 chain per core). 
 
-We used empirical Bayes (not hierarchical) with priors taken from the distributions of the grand means of the posteriors, over all groups (see  (`./Stan/stan_simulations/`) . Though not included in the published analysis; the parameter recovery was poor for some of the delta learning rule parameters (especially alphas, which just regressed to the prior). We understand this can be adjusted by setting the initial value to [0,0,0,0]; but doing so and rerunning was out of scope as the delta rules were not the winning models). 
+We used empirical Bayes (not hierarchical) with priors taken from the distributions of the grand means of the posteriors, over all groups (see  (`./Stan/stan_simulations/`) . Though not included in the published analysis; the parameter recovery poor for some of the delta learning rule parameters (especially alpha; which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0]; but refitting was out of scope as the delta rules were not the winning models). 
 
-Here, fits are in `fits/[group]/[model]/[subject]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv`. Again; if you run the fits and abort mid run, there may be extra csvs in `fits/[group]/[model]/[subject]/` that could cause issues in the postprocessing code. 
+Here, fits are in `fits/[group]/[model]/[subject]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv`. Again if you run the fits and abort mid run, there may be extra csvs in `fits/[group]/[model]/[subject]/` that could cause issues in the postprocessing code. 
 
 `parameter_recovery_formatting.ipynb` formats the .csv stan fits for MATLAB, and parameters of interest are stored in  `parameter_recovery_draws.mat`. 
 
