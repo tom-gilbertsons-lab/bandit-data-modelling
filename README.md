@@ -18,14 +18,52 @@ https://github.com/tom-gilbertsons-lab
 
 Directories with key datasets etc. highlighted 
 ```
-project_root/
+.
 ├── README.md
 ├── ccn.yaml
-├── Stan/
-├── BehaviouralData/
+├── behavioural_data/...
+│   ├── Control_Thal
+│   ├── Post_Thal
+│   ├── Pre_Thal
+│   └── stimuli-gaussian.mat
+├── ChoiceAnalysis/
+│   ├── choice_classification.m
+│   └── choice_classifications.mat
 ├── Fitting/
+│   ├── analysis.ipynb
+│   ├── Fits/...
+│   ├── fitting.ipynb
+│   └── per_subject_draws.mat
 ├── ModelComparison/
-└── ParameterRecovery/
+│   ├── log_lik_all.mat
+│   ├── model_comparison.m
+│   ├── model_comparisons.mat
+│   ├── Model_fit_A.m
+│   ├── Model_fit_B.m
+│   └── PSIS-LOO/...
+├── oedema_Oct25.code-workspace
+├── ParameterRecovery/
+│   ├── fits/...
+│   ├── parameter_recovery_draws.mat
+│   ├── parameter_recovery_fitting_BAYES.ipynb
+│   ├── parameter_recovery.m
+│   ├── parameter_recovery_simulation_BAYES.ipynb
+│   ├── paramter_recovery_formatting.ipynb
+│   ├── posterior_param_draw_ranks.m
+│   ├── posterior_param_draws_ranked.mat
+│   └── simulated_data
+└── Stan
+    ├── stan_models/
+    │   ├── AlphaSME_model.stan
+    │   ├── AlphaSMEP_model.stan
+    │   ├── AlphaSM_model.stan
+    │   ├── AlphaSMP_model.stan
+    │   ├── BayesSME_model.stan
+    │   ├── BayesSMEP_model.stan
+    │   ├── BayesSM_model.stan
+    │   └── BayesSMP_model.stan
+    ├── stan_parameter_recovery/...
+    └── stan_simulations/...
 ```
 
 Have provided ([IB's](https://github.com/i-brnrd)) conda env used for computational modelling of behavioural data as `ccn.yaml`.\
