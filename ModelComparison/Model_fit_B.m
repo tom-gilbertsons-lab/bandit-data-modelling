@@ -58,6 +58,14 @@ function [loglikelihood,probability]=Model_fit_B(model, rewards, actions,beta, p
             var(t+1,:)=var(t,:);
 
         else
+               if strcmp(model,'BayesSMP')||strcmp(model, 'BayesSMEP')
+                    pb = zeros(1,4);
+                    if t > 1
+                        if  (actions(t-1)==actions(t))
+                            pb(actions(t))  = persev;
+                        end
+                    end
+                end
             switch model
 
                 case 'BayesSM'
@@ -90,17 +98,9 @@ function [loglikelihood,probability]=Model_fit_B(model, rewards, actions,beta, p
             value(t+1,:)= (decay * value(t+1,:) + (1-decay) * decay_center);
             var(t+1,:) = sqrt( decay.^2 * var(t+1,:).^2 + var_D.^2 );
             
-            if strcmp(model,'BayesSMP')||strcmp(model, 'BayesSMEP')
-                pb = zeros(1,4);
-                if t > 1
-                    if  (actions(t-1)==actions(t))
-                        pb(actions(t))  = persev;
-                    end
-                end
-            end
         end
-    
     end
+    
     
     %% loglikelihood 
 

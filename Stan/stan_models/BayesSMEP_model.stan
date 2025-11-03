@@ -1,10 +1,12 @@
+// changes to code from doi.org/10.1093/brain/awae0252024
+//      isla july2025/oct2025 reformatted (to array syntax) for cmdStanPy
+//      isla oct2025 pulled priors for hyperparameters out of loop
+//      (see https://discourse.mc-stan.org/t/hierarchical-model-behavioural-data-should-param-standard-deviation-priors-be-group-level-or-inside-per-subject-loop/40148/2)
+
 // Define the data types
 data {
   int<lower=1> nSubjects;                           // Number of subjects
-  int<lower=1> nTrials;                             // Number of trials
-  // isla oct2025 reormatted to cmdStanPy array syntax
-  // int<lower=0,upper=4> choice[nSubjects, nTrials]; // choices made by subjects in trials    
-  // real<lower=0, upper=100> reward[nSubjects, nTrials]; // reward for each subject in trials 
+  int<lower=1> nTrials;                             // Number of trials 
   array[nSubjects, nTrials] int<lower=0, upper=4> choice; // Choice data for each subject in each trial
   array[nSubjects, nTrials] real<lower=0, upper=100> reward; // Reward data for each subject in each trial
 }
@@ -36,11 +38,6 @@ parameters {
   real<lower=0> phi_sd;               // Standard deviation of phi
   real<lower=0> persev_sd;            // Standard deviation of persev
   
-  // isla oct2025 reformatted to cmdStanPy array syntax
-  // real<lower=0,upper=3> beta[nSubjects];    // beta for each subject
-  // real<lower=-20,upper=20> phi[nSubjects];  // phi for each subject
-  // real<lower=-20,upper=20> persev[nSubjects]; // perseveration for each subject}
-
   array [nSubjects] real<lower=0,upper=3> beta;   // beta for each subject
   array [nSubjects] real<lower=-20,upper=20> phi; // phi for each subject
   array [nSubjects] real<lower=-20,upper=20> persev; // perseveration for each subject
@@ -51,10 +48,6 @@ parameters {
 // The model section where the log-likelihood is incrementally constructed
 model {
 
-  // Prior distributions for hyperparameters
-  // isla oct2025 pulled priors out of loop 
-  //(see https://discourse.mc-stan.org/t/hierarchical-model-behavioural-data-should-param-standard-deviation-priors-be-group-level-or-inside-per-subject-loop/40148/2)
-  
   beta_sd    ~ cauchy(0,1);  // Prior for beta standard deviation
   phi_sd     ~ cauchy(0,1);  // Prior for phi standard deviation
   persev_sd  ~ cauchy(0,1);  // Prior for perseveration standard deviation

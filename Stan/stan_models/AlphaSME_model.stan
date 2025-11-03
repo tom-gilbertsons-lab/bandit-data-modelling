@@ -1,10 +1,13 @@
+// changes to code from doi.org/10.1093/brain/awae0252024
+//      isla july2025/oct2025 reformatted (to array syntax) for cmdStanPy
+//      isla oct2025 pulled priors for hyperparameters out of loop
+//      (see https://discourse.mc-stan.org/t/hierarchical-model-behavioural-data-should-param-standard-deviation-priors-be-group-level-or-inside-per-subject-loop/40148/2)
+
+
 // Defining the data that is inputted into the model
 data {
   int<lower=1> nSubjects; // number of subjects
   int<lower=1> nTrials; // number of trials  
-  // isla oct2025 reormatted to cmdStanPy array syntax
-  // int<lower=0,upper=4> choice[nSubjects, nTrials]; // choices made by subjects in trials    
-  // real<lower=0, upper=100> reward[nSubjects, nTrials]; // reward for each subject in trials 
   array[nSubjects, nTrials] int<lower=0, upper=4> choice; // Choice data for each subject in each trial
   array[nSubjects, nTrials] real<lower=0, upper=100> reward; // Reward data for each subject in each trial
 }
@@ -25,11 +28,6 @@ parameters {
   real<lower=0> alpha_sd; // standard deviation of learning rate
   real<lower=0> beta_sd; // standard deviation of inverse temperature
   real<lower=0> phi_sd; // standard deviation of observation variance
-  
-  // isla oct2025 reformatted to cmdStanPy array syntax
-  // real<lower=0,upper=1> alpha[nSubjects]; // learning rate for each subject
-  // real<lower=0,upper=3> beta[nSubjects]; // inverse temperature for each subject
-  // real<lower=-20,upper=20> phi[nSubjects]; // observation variance for each subject
 
   array[nSubjects] real<lower=0, upper=1> alpha; // learning rate for each subject
   array [nSubjects] real<lower=0,upper=3> beta; // inverse temperature for each subject
@@ -39,10 +37,6 @@ parameters {
 
 // Model specifications
 model {
-
-  // Prior distributions for hyperparameters
-   // isla oct2025 pulled priors out of loop 
-   //(see https://discourse.mc-stan.org/t/hierarchical-model-behavioural-data-should-param-standard-deviation-priors-be-group-level-or-inside-per-subject-loop/40148/2)
     // Prior distributions for hyperparameters
     alpha_sd ~ cauchy(0,1);
     beta_sd ~ cauchy(0,1);

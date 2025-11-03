@@ -4,8 +4,9 @@
 
 We use MATLAB and python. `cmdPyStan` is used for modelling (wrapped in `.ipynb` notebooks, using `joblib` for parallelisation) and have used Arviz for initial checks (however MATLAB is standard in field so structs <--> dicts throughout). 
 
-The github repo won't have data in it (see the .gitignore); the OSF version does (over at XXXX). 
+No datasets in the github repo, just code;
 
+See OSF for data & code
 
 #### General Notes 
 
@@ -116,22 +117,36 @@ If you run fits and abort mid run (or ran more than one fit without redirecting 
 
 ## Model comparison  `./ModelComparison`
 
-Suggest using the parfor for significant speedup to calculate the log-likelihood (suppress/ignore broadcast var warnings and keep an eye on RAM). 
+See `model_comparison.m` script. 
 
-See `model_comparison.m` script and `model_comparisons.mat`; which contains several different ways of asking the data which was model the best fit. 
+Suggest using the parfor for significant speedup to calculate the log-likelihood (suppress/ignore broadcast var warnings and keep an eye on RAM). Builds `log_lik_all.mat` that feeds into the metrics calculated in the rest of `model_comparison.m` and stored in `model_comparisons.mat`.
 
 ### Bayes Information Criterion and Liklihood Per Trial 
 
-After running though PSIS-LOO for model comparison (standard in field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). 
+After running though PSIS-LOO for model comparison (standard in field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). In the table below each entry is reported as 
+$$
 
-         Group         k < p7    0.7< k < 1    k > 1
-    _______________    ______    __________    _____
+N_{k<0.7}/N_{0.7<k<1.0}/ N_{k>1.0}  
 
-    "HC"                 10         125         121 
-    "PreTreat"            8         169         119 
-    "PostTreat"           6         149         141 
-    "PostTreat_Liv"       4          35          57 
-    "PostTreat_Dun"       4          96         100 
+$$
+
+       Group           AlphaSM         AlphaSME         AlphaSMP       AlphaSMEP  
+    _______________    ____________    _____________    ____________    ____________
+
+    "HC"               "2 / 26 / 4"    "2 / 17 / 13"    "0 / 0 / 32"    "0 / 0 / 32"
+    "PreTreat"         "0 / 28 / 9"    "1 / 23 / 13"    "0 / 0 / 37"    "0 / 0 / 37"
+    "PostTreat"        "2 / 28 / 7"    "1 / 20 / 16"    "0 / 0 / 37"    "0 / 0 / 37"
+    "PostTreat_Liv"    "2 / 9 / 1"     "1 / 3 / 8"      "0 / 0 / 12"    "0 / 0 / 12"
+    "PostTreat_Dun"    "2 / 15 / 8"    "0 / 17 / 8"     "0 / 0 / 25"    "0 / 0 / 25"
+
+         Group           BayesSM         BayesSME         BayesSMP       BayesSMEP  
+    _______________    ____________    _____________    ____________    ____________
+
+    "HC"               "1 / 24 / 7"    "4 / 21 / 7"     "0 / 0 / 32"    "0 / 0 / 32"
+    "PreTreat"         "0 / 34 / 3"    "3 / 26 / 8"     "0 / 0 / 37"    "0 / 0 / 37"
+    "PostTreat"        "1 / 29 / 7"    "1 / 26 / 10"    "0 / 0 / 37"    "0 / 0 / 37"
+    "PostTreat_Liv"    "1 / 6 / 5"     "0 / 6 / 6"      "0 / 0 / 12"    "0 / 0 / 12"
+    "PostTreat_Dun"    "0 / 19 / 6"    "2 / 13 / 10"    "0 / 0 / 25"    "0 / 0 / 25"
 
 
 PSIS-LOO asks 'how well does each model predict unseen data better (without penalising for additional parameters)?'. But though Post-Op Dundee patients have different parameters, on average, than eg Healthy Controls; given our sample sizes and intrapatient variability a new post-op patient's parameters wouldn't be predictable from other post-op patients. So in our dataset we find PSIS-LOO gives almost all pareto k-values > 0.7 (also PSIS-LOO (& WAIC); both CV approximations, are very close to the simple mean of the likelihoods- see `model_comparisons.mat`).   
@@ -181,7 +196,7 @@ As before; algorithm originally written by Will Gilmour, see [Gilmour et.al.](do
 
 ## Parameter Recovery `./ParameterRecovery`
 
-NB: IB didn't know which model had 'won' (or what that really meant, see discussion above) so ran parameter recovery on all 4 'best' models (AlphaSMP, AlphaSMEP, BayesSMP, BayesSMEP). So some delta rule data is in structs (but is unused in the revision); and some are stored within `./ParameterRecovery/AlphaParameterRecovery/`. 
+Parameter recovery was run on the winning model, (which by whichever metric) is BayesSMEP.
 
 **Posterior Sampling**
 
@@ -190,13 +205,15 @@ The script `posterior_param_draw_ranks.m` selects K=5 posterior draws. For each 
 
 **Behavioural Data Simulation**
 
-The notebook `parameter_recovery_simulation_BAYES.ipynb` loads in behavioural data to obtain each participants walks. Per participant, 3 repeats of each of the K-5 samples are simulated using stan (`./Stan/stan_simulations/`) (a total of 15 per participant). The simulated data are stored in `./simulated_data/YYYY-MM-DD-HH-MM-SS-simulations` and within this the simulated behavioural data is stored as `simulations_stan_struct.mat` (and also the stan generated .csvs are retained). There is a matplotlib plotting function at the end of the notebook if needed. 
+The notebook `parameter_recovery_simulation.ipynb` loads in behavioural data to obtain each participants walks. Per participant, 3 repeats of each of the K-5 samples are simulated using stan (`./Stan/stan_simulations/`) (a total of 15 per participant). The simulated data are stored in `./simulated_data/YYYY-MM-DD-HH-MM-SS-simulations` and within this the simulated behavioural data is stored as `simulations_stan_struct.mat` (and also the stan generated .csvs are retained). There is a matplotlib plotting function at the end of the notebook if needed. 
 
 **Simulated Behavioural Data Fitting**
 
-As before, we do parallelised stan fits in `parameter_recovery_fitting_BAYES.ipynb`. On our i9 24-core machine we can refit the 15 simulated sets from a single participant in approx, 25-45 minutes on the 4 cores (1 chain per core). 
+As before, we do parallelised stan fits in `parameter_recovery_fitting.ipynb`. On our i9 24-core machine we can refit the 15 simulated sets from a single participant in approx, 25-45 minutes on the 4 cores (1 chain per core). 
 
-We used empirical Bayes (not hierarchical) with priors taken from the distributions of the grand means of the posteriors, over all groups (see  (`./Stan/stan_simulations/`) . Though not included in the published analysis; the parameter recovery poor for some of the delta learning rule parameters (especially alpha; which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0]; but refitting was out of scope as the delta rules were not the winning models). 
+We used empirical Bayes (not hierarchical) with priors taken from the distributions of the grand means of the posteriors, over all groups (see  (`./Stan/stan_simulations/`). 
+
+*Though not included in the published analysis; parameter recovery was performed for some delta rule models and parameter recovery was poor (especially alpha; which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0]; but refitting was out of scope as the delta rules were not the winning models).*
 
 Here, fits are in `fits/[group]/[model]/[subject]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv`. Again if you run the fits and abort mid run, there may be extra csvs in `fits/[group]/[model]/[subject]/` that could cause issues in the postprocessing code. 
 

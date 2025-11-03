@@ -1,6 +1,6 @@
-// BayesSMEP_model.stan for Paramter Recovery
-// Stan model implementing a Bayesian Kalman filter with exploration and perseveration bonuses
-// Pooling is removed for parameter recovery purposes; and empirical bayes priors added 
+// BayesSMEP_model.stan for Paramteer Recovery
+// Empirical priors from posterior dist used (no heirarchical pooling)
+// IB 2025
 
 data {
   int<lower=1> nSubjects;                           // Number of subjects

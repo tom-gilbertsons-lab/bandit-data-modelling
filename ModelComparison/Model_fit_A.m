@@ -57,6 +57,16 @@ function [loglikelihood, probability] = Model_fit_A(model, rewards, actions, alp
         end
 
         LCb(t,:) = t - LC; % Update LCb for this time step (since each bandit was last chosen)
+
+
+        if strcmp(model,'AlphaSMP') || strcmp(model,'AlphaSMEP')
+            pb = zeros(1,4);
+            if t > 1
+                if actions(t-1) == actions(t)
+                    pb(actions(t)) = persev;
+                end
+            end
+        end
       
         switch model
             case 'AlphaSM'
@@ -83,14 +93,6 @@ function [loglikelihood, probability] = Model_fit_A(model, rewards, actions, alp
         % Mark last chosen time
         LC(a) = t;
 
-        if strcmp(model,'AlphaSMP') || strcmp(model,'AlphaSMEP')
-            pb = zeros(1,4);
-            if t > 1
-                if actions(t-1) == actions(t)
-                    pb(actions(t)) = persev;
-                end
-            end
-        end
     end
     
     %% Log-likelihood over responded trials

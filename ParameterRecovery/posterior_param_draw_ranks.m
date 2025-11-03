@@ -1,4 +1,4 @@
-%% Paramter Recovery: Draw Selection 
+%% Parameter Recovery: Draw Selection 
 
 % For each GROUP × MODEL × SUBJECT, pick K=5 representative 
 % posterior draws across params (beta, ±phi, ±persev) for recovery simulations.
@@ -21,7 +21,7 @@ sample_indices = round(linspace(1, 8000, K));
 
 % I've left all of these in for [p
 
-winning_models = {'AlphaSMP','AlphaSMEP','BayesSMP','BayesSMEP'};
+winning_models = {'BayesSMEP'};
 
 posterior_param_draws_ranked = struct();
 

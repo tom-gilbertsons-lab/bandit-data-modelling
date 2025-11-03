@@ -513,47 +513,68 @@ T_WAIC = compare_metrics(MEAN_LL, 'LLmean_per_trial_total', ...
 
 %%
 %% Categorise PSIS-LOO K values 
-%% Per-group Pareto-k category counts ("pie-style") -> cat_k
-% Uses existing group_list and psis_loo.
-
-%% Per-group Pareto-k category counts ("pie-style") -> cat_k_table
-% Uses your existing naming: group_list, group_idx, group_name, model_names, model_idx.
-
-group_list = fieldnames(log_likelihoods);                % cell array of group names
+%% Per-group Pareto-k category counts 
+load('model_comparisons.mat');
+load('log_lik_all.mat');
+psis_loo=model_comparisons.psis_loo; 
+group_list       = fieldnames(log_likelihoods);
 number_of_groups = numel(group_list);
 
-counts_lt_0p7   = zeros(number_of_groups,1);
-counts_0p7_to_1 = zeros(number_of_groups,1);
-counts_ge_1     = zeros(number_of_groups,1);
+alpha_models = {'AlphaSM','AlphaSME','AlphaSMP','AlphaSMEP'};
+bayes_models = {'BayesSM','BayesSME','BayesSMP','BayesSMEP'};
 
+% --- Alpha models ---
+entries_alpha = cell(number_of_groups, numel(alpha_models));
 for group_idx = 1:number_of_groups
-    group_name   = group_list{group_idx};
-    model_names  = fieldnames(psis_loo.(group_name));
-
-    all_k_values_for_group = [];
-    for model_idx = 1:numel(model_names)
-        model_name = model_names{model_idx};
-        all_k_values_for_group = [all_k_values_for_group; psis_loo.(group_name).(model_name).k(:)]; %#ok<AGROW>
+    group_name = group_list{group_idx};
+    for model_idx = 1:numel(alpha_models)
+        model_name = alpha_models{model_idx};
+        k_vals = psis_loo.(group_name).(model_name).k(:);
+        a = sum(k_vals < 0.7);
+        b = sum(k_vals >= 0.7 & k_vals < 1.0);
+        c = sum(k_vals >= 1.0);
+        entries_alpha{group_idx, model_idx} = sprintf('%d / %d / %d', a, b, c);
     end
-
-    counts_lt_0p7(group_idx)   = sum(all_k_values_for_group < 0.7);
-    counts_0p7_to_1(group_idx) = sum(all_k_values_for_group >= 0.7 & all_k_values_for_group < 1.0);
-    counts_ge_1(group_idx)     = sum(all_k_values_for_group >= 1.0);
 end
 
-cat_k_table = table( ...
-    string(group_list(:)), ...
-    counts_lt_0p7, counts_0p7_to_1, counts_ge_1, ...
-    'VariableNames', {'Group','k < p7','0.7< k < 1','k > 1'});
+Alpha_k_compact = table(string(group_list(:)), 'VariableNames', {'Group'});
+for model_idx = 1:numel(alpha_models)
+    model_name = alpha_models{model_idx};
+    Alpha_k_compact.(model_name) = string(entries_alpha(:, model_idx));
+end
 
-disp(cat_k_table)
+% --- Bayes models ---
+entries_bayes = cell(number_of_groups, numel(bayes_models));
+for group_idx = 1:number_of_groups
+    group_name = group_list{group_idx};
+    for model_idx = 1:numel(bayes_models)
+        model_name = bayes_models{model_idx};
+        k_vals = psis_loo.(group_name).(model_name).k(:);
+        a = sum(k_vals < 0.7);
+        b = sum(k_vals >= 0.7 & k_vals < 1.0);
+        c = sum(k_vals >= 1.0);
+        entries_bayes{group_idx, model_idx} = sprintf('%d / %d / %d', a, b, c);
+    end
+end
+
+Bayes_k_compact = table(string(group_list(:)), 'VariableNames', {'Group'});
+for model_idx = 1:numel(bayes_models)
+    model_name = bayes_models{model_idx};
+    Bayes_k_compact.(model_name) = string(entries_bayes(:, model_idx));
+end
+
+% show
+disp(Alpha_k_compact);
+disp(Bayes_k_compact);
+
+clear group_idx group_name model_idx model_name k_vals a b c ...
+      entries_alpha entries_bayes number_of_groups alpha_models bayes_models
 
 clear group_idx group_name model_idx model_name model_names number_of_groups all_k_values_for_group
 
 
 %% Param Means (don't thik we've used this; but left it in) 
-original_param_means = compute_parameter_means(original_priors);
-new_param_means = compute_parameter_means(new_priors);
+original_param_means = compute_parameter_means(inferencedata);
 
 function parameter_means = compute_parameter_means(inferenceData)
 % returns per-subject means for each param in inferenceData
