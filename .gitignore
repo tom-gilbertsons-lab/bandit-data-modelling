@@ -1,0 +1,18 @@
+# Ignore data and artefact filetypes repo-wide
+*.mat
+*.csv
+*.fig
+*.asv
+*.code-workspace
+*.txt
+
+# Exception: keep the stimuli 
+!behavioural_data/stimuli-gaussian.mat
+
+# --- Stan subtree: keep only .stan files (case-insensitive) ---
+Stan/stan_models/**    
+!Stan/stan_models/**.stan
+Stan/stan_parameter_recovery/**
+!Stan/stan_parameter_recovery/**.stan
+Stan/stan_simulations/**
+!Stan/stan_simulations/**.stan

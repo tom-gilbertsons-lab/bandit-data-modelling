@@ -35,18 +35,18 @@ Datasets/ dicts/ structs usually go GROUP × MODEL × SUBJECT.
 
 
 **NB**
-Oedema paper submitted June 2025. When IB was modelling preliminary data for other project (July 2025); spotted typos in stan priors. Investigating these coincided with the receipt of the Oedema paper review; where it was decided to split the postop data by site. IB wrote this repo and got code ready for publication, but did very little of the tough stuff, all TG & WG's work from [Gilmour et.al.](doi.org/10.1093/brain/awae025).
+Oedema paper submitted June 2025. When IB was modelling preliminary data for other project (July 2025); spotted typos in stan priors. Investigating these coincided with the receipt of the Oedema paper review; where it was decided to split the postop data by site. IB wrote this repo; all based on TG & WG's work from [Gilmour et.al.](https://doi.org/10.1093/brain/awae025).
 
  
 ### Models  `./Stan`
 
-All models are originally written by Will Gilmour, see [Gilmour et.al.](doi.org/10.1093/brain/awae025).\
+All models are originally written by Will Gilmour, see [Gilmour et.al.](https://doi.org/10.1093/brain/awae025).\
 **No changes** to the models or decision rules. 
 However stan code has been updated from pyStan to cmdPyStan (eg. array syntax) and priors/ hyperparameters have been updated (Isla Barnard, 2025). 
 
 ### Fitting `./Fitting`
 
-`./Fitting/fitting.ipynb` reformats the behavioural data from concatenated `.csv` format as in [Gilmour et.al.](doi.org/10.1093/brain/awae025)\
+`./Fitting/fitting.ipynb` reformats the behavioural data from concatenated `.csv` format,
 Compiles & fits Stan models (see `Stan/stan-models`):
 
 ### Model Families and Free Parameters
