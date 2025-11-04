@@ -8,17 +8,17 @@ param_recovery_fits= load('parameter_recovery_draws.mat');
 
 %%
 groups = fieldnames(param_recovery_fits);
-models = {'BayesSMP','BayesSMEP'};
-params_for_model = struct( ...
-    'BayesSMP',  {{'beta','persev'}}, ...
-    'BayesSMEP', {{'beta','phi','persev'}} );
+% %models = {'BayesSMP','BayesSMEP'};
+% %params_for_model = struct( ...
+%     'BayesSMP',  {{'beta','persev'}}, ...
+%     'BayesSMEP', {{'beta','phi','persev'}} );
 
+
+models = {'BayesSMEP'};
+params_for_model = struct('BayesSMEP', {{'beta','phi','persev'}} );
 subject_key_fmt = 'subject_%02d';
 
 param_recovery_summary_stats = struct();
-
-nSubSims = 3;
-nDraws = 10000;
 
 for group_idx = 1:numel(groups)
     group = groups{group_idx};
@@ -59,9 +59,9 @@ for group_idx = 1:numel(groups)
 end
 
 
-
-clear recovered_means recovered_hdis posterior_draws sim_draws param_samples
-clear subject_key_fmt nDraws nSubSims params_for_model groups models param_list 
-clear group model param subject nSubjects K param_idx model_idx group_idx
+% 
+% clear recovered_means recovered_hdis posterior_draws sim_draws param_samples
+% clear subject_key_fmt nDraws nSubSims params_for_model groups models param_list 
+% clear group model param subject nSubjects K param_idx model_idx group_idx
 
 

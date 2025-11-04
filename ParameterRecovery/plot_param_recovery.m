@@ -2,10 +2,9 @@
 
 group_labels = {'Pre Treat (n=37)','Post Treat Liverpool (n=12)','Post Treat Dundee (n = 25)', 'Healthy Controls'};
 groups       = {'PreTreat','PostTreat_Liv','PostTreat_Dun','HC'};
-models_recovered = {'BayesSMP','BayesSMEP'};
+models_recovered = {'BayesSMEP'};
 
 params_recovered = struct( ...
-    'BayesSMP',  {{'beta','persev'}}, ...
     'BayesSMEP', {{'beta','phi','persev'}} );
 
 subject_key_fmt = 'subject_%02d';
@@ -58,7 +57,7 @@ for model_idx = 1:numel(models_recovered)
         xymax_all = max([x_all; y_all]);
         plot(ax_all, [xymin_all xymax_all], [xymin_all xymax_all], '-', 'Color', [0.3 0.3 0.3], 'LineWidth', 1);
         [r_all, p_all] = corr(x_all, y_all, 'type','Pearson', 'rows','complete');
-        p_txt = sprintf('p = %.3g', p_all); if p_all < 0.01, p_txt = 'p < 0.01'; end
+        p_txt = sprintf('p = %.3g', p_all); if p_all < 0.001, p_txt = 'p < 0.001'; end
         text(ax_all, 0.05, 0.92, sprintf('r = %.2f, %s', r_all, p_txt), ...
             'Units','normalized', 'FontSize', 9, 'FontWeight','bold', 'Color', [0.15 0.15 0.15]);
         title(ax_all, 'All groups');
@@ -90,7 +89,7 @@ for model_idx = 1:numel(models_recovered)
             xymax = max([x_grp_vec; y_grp_vec]);
             plot(ax, [xymin xymax], [xymin xymax], '-', 'Color', [0.3 0.3 0.3], 'LineWidth', 1);
             [r_grp, p_grp] = corr(x_grp_vec, y_grp_vec, 'type','Pearson', 'rows','complete');
-            p_txt = sprintf('p = %.3g', p_grp); if p_grp < 0.01, p_txt = 'p < 0.01'; end
+            p_txt = sprintf('p = %.3g', p_grp); if p_grp < 0.001, p_txt = 'p < 0.001'; end
             text(ax, 0.05, 0.92, sprintf('r = %.2f, %s', r_grp, p_txt), ...
                 'Units','normalized', 'FontSize', 9, 'FontWeight','bold', 'Color', [0.15 0.15 0.15]);
 

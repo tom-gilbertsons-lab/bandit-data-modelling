@@ -176,7 +176,7 @@ clear all_behavioural log_lik
 
 %% MODEL COMPARISON METRICS 
 
-% log_likelihoods = load('log_lik_all.mat');
+log_likelihoods = load('log_lik_all.mat');
 model_comparisons = struct(); % master struct for publication 
 
 % as discussed in readme, our aim here is model comparison- which model best 

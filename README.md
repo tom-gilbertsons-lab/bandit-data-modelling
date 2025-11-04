@@ -17,7 +17,7 @@ t.gilbertson@dundee.ac.uk\
 https://github.com/tom-gilbertsons-lab
 
 
-Directories with key datasets etc. highlighted 
+Directories with key datasets etc. highlighted ** 
 ```
 .
 ├── README.md
@@ -26,17 +26,17 @@ Directories with key datasets etc. highlighted
 │   ├── Control_Thal
 │   ├── Post_Thal
 │   ├── Pre_Thal
-│   └── stimuli-gaussian.mat
+│   └── **stimuli-gaussian.mat**
 ├── ChoiceAnalysis/
 │   ├── choice_classification.m
-│   └── choice_classifications.mat
+│   └── **choice_classifications.mat**
 ├── Fitting/
 │   ├── analysis.ipynb
 │   ├── Fits/...
 │   ├── fitting.ipynb
-│   └── per_subject_draws.mat
+│   └── **per_subject_draws.mat**
 ├── ModelComparison/
-│   ├── log_lik_all.mat
+│   ├── **log_lik_all.mat**
 │   ├── model_comparison.m
 │   ├── model_comparisons.mat
 │   ├── Model_fit_A.m
@@ -45,13 +45,13 @@ Directories with key datasets etc. highlighted
 ├── oedema_Oct25.code-workspace
 ├── ParameterRecovery/
 │   ├── fits/...
-│   ├── parameter_recovery_draws.mat
+│   ├── **parameter_recovery_draws.mat**
 │   ├── parameter_recovery_fitting_BAYES.ipynb
 │   ├── parameter_recovery.m
 │   ├── parameter_recovery_simulation_BAYES.ipynb
 │   ├── paramter_recovery_formatting.ipynb
 │   ├── posterior_param_draw_ranks.m
-│   ├── posterior_param_draws_ranked.mat
+│   ├── **posterior_param_draws_ranked.mat**
 │   └── simulated_data
 └── Stan
     ├── stan_models/
@@ -124,11 +124,12 @@ Suggest using the parfor for significant speedup to calculate the log-likelihood
 ### Bayes Information Criterion and Liklihood Per Trial 
 
 After running though PSIS-LOO for model comparison (standard in field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). In the table below each entry is reported as 
-$$
 
+$$
 N_{k<0.7}/N_{0.7<k<1.0}/ N_{k>1.0}  
-
 $$
+
+
 
        Group           AlphaSM         AlphaSME         AlphaSMP       AlphaSMEP  
     _______________    ____________    _____________    ____________    ____________
@@ -213,7 +214,7 @@ As before, we do parallelised stan fits in `parameter_recovery_fitting.ipynb`. O
 
 We used empirical Bayes (not hierarchical) with priors taken from the distributions of the grand means of the posteriors, over all groups (see  (`./Stan/stan_simulations/`). 
 
-*Though not included in the published analysis; parameter recovery was performed for some delta rule models and parameter recovery was poor (especially alpha; which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0]; but refitting was out of scope as the delta rules were not the winning models).*
+*Though not included in the published analysis; parameter recovery was performed for some delta rule models. Recovery was poor (especially alpha; which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0]; but refitting was out of scope as the delta rules were not the winning models).*
 
 Here, fits are in `fits/[group]/[model]/[subject]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv`. Again if you run the fits and abort mid run, there may be extra csvs in `fits/[group]/[model]/[subject]/` that could cause issues in the postprocessing code. 
 
