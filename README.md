@@ -126,7 +126,7 @@ Suggest using the parfor for significant speedup to calculate the log-likelihood
 After running though PSIS-LOO for model comparison (standard in field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). In the table below each entry is reported as 
 
 $$
-N_{k<0.7}/N_{0.7<k<1.0}/ N_{k>1.0}  
+N_{k < 0.7}/N_{0.7 < k < 1.0}/ N_{ k > 1.0}  
 $$
 
 
