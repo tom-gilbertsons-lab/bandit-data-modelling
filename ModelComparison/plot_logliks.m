@@ -1,5 +1,6 @@
 % included for completeness, all chatGPT generated; not used for
 % publication just checking as we go
+load('log_lik_all.mat','log_likelihoods');
 load('model_comparisons.mat','model_comparisons');
 % 
 % included for completeness, all chatGPT generated; not used for
@@ -167,3 +168,113 @@ set(ax2,'XTick',1:numel(cats),'XTickLabel',cats,'XTickLabelRotation',20)
 ylabel(ax2,'% difference vs LOO (per trial)')
 title(ax2,'%Δ (MEAN\_LL − LOO)')
 lg2 = legend(model_order,'Location','eastoutside','Box','off'); lg2.Title.String = 'Models';
+
+
+%%  PLOT Likelihood Hists (HC, Pre, Post) 
+
+% Settings
+model_name = 'BayesSMEP';
+groups_for_plots = {'PostTreat_Dun','PreTreat','HC'};   % 1,2,3 in this order
+base_cols = [ ...
+    0.53 0.32 0.80;   % deep purple for PostTreat_Dun
+    0.33 0.78 0.33;   % green for PreTreat
+    0.47 0.65 0.90];  % blue-purple for HC
+
+% Collect global range for consistent x-axis and bins
+all_vals = [];
+for gi = 1:numel(groups_for_plots)
+    G = groups_for_plots{gi};
+    L = log_likelihoods.(G).(model_name).loglikelihood;   % (nDraws x nSubjects)
+    all_vals = [all_vals; L(:)];
+end
+x_min = min(all_vals);
+x_max = max(all_vals);
+bin_edges = linspace(x_min, x_max, 600);
+
+% Figure with 3 rows, 1 column
+figure('Color','w','Position',[100 100 900 900]);
+
+for gi = 1:numel(groups_for_plots)
+    G = groups_for_plots{gi};
+    L = log_likelihoods.(G).(model_name).loglikelihood;   % (nDraws x nSubjects)
+    [nDraws, nSubs] = size(L);
+
+    % build light-to-base shades for this panel
+    base = base_cols(gi,:);
+    t = linspace(0.15, 1.0, nSubs)';                      % light → base
+    shades = 1 - (1 - base).*t;                           % interpolate towards white
+
+    subplot(numel(groups_for_plots),1,gi); hold on;
+    for s = 1:nSubs
+        histogram(L(:,s), ...
+            'BinEdges', bin_edges, ...
+            'Normalization','pdf', ...
+            'FaceColor', shades(s,:), ...
+            'EdgeColor','none', ...
+            'FaceAlpha', 0.55);
+    end
+    xlim([x_min x_max]);
+    ylabel('Density');
+    title(sprintf('%s — %s', G, model_name), 'Interpreter','none');
+    box on;
+end
+
+xlabel('Log-likelihood (per draw)');
+sgtitle('Per-subject log-likelihood distributions');
+
+%%
+%%  PLOT Likelihood Hists (HC, Pre, Post) — per-trial
+
+% Settings
+model_name = 'BayesSMEP';
+groups_for_plots = {'PostTreat_Dun','PreTreat','HC'};   % 1,2,3 in this order
+base_cols = [ ...
+    0.53 0.32 0.80;   % deep purple for PostTreat_Dun
+    0.33 0.78 0.33;   % green for PreTreat
+    0.47 0.65 0.90];  % blue-purple for HC
+
+% Collect global range for consistent x-axis and bins (PER-TRIAL)
+all_vals = [];
+for gi = 1:numel(groups_for_plots)
+    G = groups_for_plots{gi};
+    L = log_likelihoods.(G).(model_name).loglikelihood;      % (nDraws x nSubjects)
+    vt_row = valid_trials.(G)(1:size(L,2))';                  % 1 x nSubjects
+    L_per_trial = L ./ vt_row;                                % implicit expansion
+    all_vals = [all_vals; L_per_trial(:)];
+end
+x_min = min(all_vals);
+x_max = max(all_vals);
+bin_edges = linspace(x_min, x_max, 600);
+
+% Figure with 3 rows, 1 column
+figure('Color','w','Position',[100 100 900 900]);
+
+for gi = 1:numel(groups_for_plots)
+    G = groups_for_plots{gi};
+    L = log_likelihoods.(G).(model_name).loglikelihood;      % (nDraws x nSubjects)
+    [nDraws, nSubs] = size(L);
+    vt_row = valid_trials.(G)(1:nSubs)';                      % 1 x nSubjects
+    L_per_trial = L ./ vt_row;                                % per-trial values
+
+    % build light-to-base shades for this panel
+    base = base_cols(gi,:);
+    t = linspace(0.15, 1.0, nSubs)';                          % light → base
+    shades = 1 - (1 - base).*t;                               % towards white
+
+    subplot(numel(groups_for_plots),1,gi); hold on;
+    for s = 1:nSubs
+        histogram(L_per_trial(:,s), ...
+            'BinEdges', bin_edges, ...
+            'Normalization','pdf', ...
+            'FaceColor', shades(s,:), ...
+            'EdgeColor','none', ...
+            'FaceAlpha', 0.55);
+    end
+    xlim([x_min x_max]);
+    ylabel('Density');
+    title(sprintf('%s — %s (per trial)', G, model_name), 'Interpreter','none');
+    box on;
+end
+
+xlabel('Log-likelihood per trial (per draw)');
+sgtitle('Per-subject log-likelihood distributions (per-trial)');
