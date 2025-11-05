@@ -1,0 +1,6 @@
+# De-emphasise notebooks entirely
+*.ipynb linguist-generated
+
+# Ensure code files are counted
+*.m    linguist-detectable=true
+*.stan linguist-detectable=true
