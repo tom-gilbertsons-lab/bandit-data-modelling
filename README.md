@@ -4,9 +4,9 @@
 
 We use MATLAB and python. `cmdPyStan` is used for modelling (wrapped in `.ipynb` notebooks, using `joblib` for parallelisation) and have used Arviz for initial checks (however MATLAB is standard in field so structs <--> dicts throughout). 
 
-No datasets in the github repo, just code;
+No datasets in the github repo.
 
-See OSF for data & code
+See OSF for data & code.
 
 #### General Notes 
 
@@ -74,12 +74,12 @@ Datasets (dicts & structs) usually go [GROUP] × [MODEL] × [SUBJECT].
 
 
 **NB**
-Oedema paper submitted June 2025. When IB was modelling preliminary data for different project (July 2025); spotted typos in priors within Stan. Investigating these coincided with the receipt of the oedema paper review; where it was decided to split the postop data by site. IB wrote this repo; all based on TG & WG's work from [Gilmour et.al.](https://doi.org/10.1093/brain/awae025).
+Oedema paper submitted June 2025. When IB was modelling preliminary data for different project (July 2025) spotted typos in priors within Stan. Investigating these coincided with the receipt of the oedema paper review, where it was decided to split the postop data by site. IB wrote this repo based on TG & WG's work[Gilmour et.al.](https://doi.org/10.1093/brain/awae025).
 
  
 ### Models  `./Stan`
 
-All models are originally written by Will Gilmour, see [Gilmour et.al.](https://doi.org/10.1093/brain/awae025).\
+All models are originally written by WG [Gilmour et.al.](https://doi.org/10.1093/brain/awae025).\
 **No changes** to the models or decision rules. 
 However stan code has been updated from pyStan to cmdPyStan (eg. array syntax) and priors/ hyperparameters have been updated (IB, 2025). 
 
@@ -106,7 +106,7 @@ All using
 CHAINS= 4 nWarmup = 2500 nSamples = 2500
 ```
 
-*There are occasional divergent transitions in the fits; more commonly in the delta rule models, contact authors for details (addressing these was out of scope in this refit).*\
+*There are occasional divergent transitions in the fits, more commonly in the delta rule models, contact authors for details (addressing these was out of scope in this refit).*\
 `cmdPyStan` fits are written out as `.csv`  into `fits/[group]/[model]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv` so e.g. `AlphaSME_model-20251009150541_4.csv` is the 4th chain of one run in early October 2025. 
 
 `./Fitting/analysis.ipynb` loads fits and converts to [Arviz](https://python.arviz.org/en/stable/) inference data objects for look at posteriors. Parameters of interest are written out to MATLAB as `per_subject_draws.mat`. 
@@ -122,7 +122,7 @@ Suggest using the parfor for significant speedup to calculate the log-likelihood
 
 ### Bayes Information Criterion and Liklihood Per Trial 
 
-After running though PSIS-LOO for model comparison (standard in field) found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). In the table below each entry is reported as 
+After running though PSIS-LOO for model comparison, we found the pareto k-values were as follows (see [here](https://mc-stan.org/loo/reference/pareto-k-diagnostic.html) for more). In the table below each entry is reported as 
 
 $$
 N_{k < 0.7}/N_{0.7 < k < 1.0}/ N_{ k > 1.0}  
@@ -150,9 +150,10 @@ $$
 
 
 Clearly almost all pareto k-values < 0.7.\
-PSIS-LOO asks how well each model predicts unseen data, without penalising for additional parameters./
-For example, in this dataset, though post-op patients have different parameters, on average, than healthy controls, gien our small sample sizes a given post-op patient's behavioural data would never be predictable. As expected, pareto k-values are generally > 0.7 (also PSIS-LOO (& WAIC); both CV approximations, are very close to the simple mean of the likelihoods- see `model_comparisons.mat`)./
-Is LOO-CV approximation needed (we don't have time to run LOO-CV) given we are actually asking which proposed cognitive algorithms best describe the data. 
+PSIS-LOO asks how well each model predicts unseen data, without penalising for additional parameters.
+For example, in this dataset, though post-op patients have different parameters, on average, than healthy controls, a post-op patient's behavioural data would never be predictable from the others (and so, as expected, pareto k-values are generally > 0.7). Also PSIS-LOO (& WAIC), both CV approximations, are very close to the mean of the likelihoods- see `model_comparisons.mat`).
+
+Is LOO-CV approximation really needed to answer which proposed cognitive algorithm best describes the data? (we don't have time to run LOO-CV).
 
 As per Wilson & Collins 2019, have included the BIC (Bayes Information Criterion) and the LPT (Liklihood per trial) as suggested by the authoritative 'Ten Simple Rules....' https://doi.org/10.7554/eLife.49547 
 
@@ -192,7 +193,7 @@ To complete with TG's codes for e.g. P(stay) & P(choose best bandit).
 **Choice Classification**
 
 The script `choice_classification.m` uses the Kalman Filter representation of value to classify behavioural choices into Exploitative, Directed Explorative or Random Explorative. 
-As before; algorithm originally written by Will Gilmour, see [Gilmour et.al.](https://doi.org/10.1093/brain/awae025) and was adapted for this refit. 
+As before, originally written by WG [Gilmour et.al.](https://doi.org/10.1093/brain/awae025) and was adapted for this refit. 
 
 ## Parameter Recovery `./ParameterRecovery`
 
@@ -211,12 +212,12 @@ The notebook `parameter_recovery_simulation.ipynb` loads in behavioural data to 
 
 As before, we do parallelised stan fits in `parameter_recovery_fitting.ipynb`. We used empirical Bayes (not hierarchical) with priors taken from the distributions of the grand means of the posteriors, over all groups (see  (`./Stan/stan_simulations/`). 
 
-*Though not included in the published analysis; parameter recovery was performed for some delta rule models. Recovery was poor (especially alpha; which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0]; but refitting was out of scope as the delta rules were not the winning models).*
+*Though not included in the published analysis, parameter recovery was performed for some delta rule models. Recovery was poor (especially alpha, which just regressed to the prior). We understand this can be better recovered by setting the initial value to [0,0,0,0], but refitting was out of scope as the delta rules were not the winning models).*
 
 Here, fits are in `fits/[group]/[model]/[subject]/[model_name]-YYYYMMDDHHMMSS_CHAIN.csv`. Again if fits are aborted mid run, there may be extra .csvs in `fits/[group]/[model]/[subject]/` that should be removed beofre post processing. `parameter_recovery_formatting.ipynb` formats the .csv stan fits for MATLAB, and parameters stored in  `parameter_recovery_draws.mat`. 
 
 **Parameter Recovery Analysis**
 
-`simulations_stan_struct.mat` and `parameter_recovery_draws.mat` are loaded into MATLAB using `parametter_recovery.m` which calculates the means and the HDI for each simulated parameter; storing this in `param_recovery_summary_stats.mat`. There is a plotting file (ChatGPT generated) to check these in `plot_param_recovery.m`, 
+`simulations_stan_struct.mat` and `parameter_recovery_draws.mat` are loaded into MATLAB using `parametter_recovery.m` which calculates the means and the HDI for each simulated parameter, storing this in `param_recovery_summary_stats.mat`. There is a plotting file (ChatGPT generated) to check these in `plot_param_recovery.m`, 
 
 

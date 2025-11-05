@@ -227,11 +227,12 @@ sgtitle('Per-subject log-likelihood distributions');
 
 % Settings
 model_name = 'BayesSMEP';
-groups_for_plots = {'PostTreat_Dun','PreTreat','HC'};   % 1,2,3 in this order
+groups_for_plots = {'PostTreat_Dun','PostTreat_Liv', 'PreTreat','HC'};   % 1,2,3 in this order
 base_cols = [ ...
-    0.53 0.32 0.80;   % deep purple for PostTreat_Dun
-    0.33 0.78 0.33;   % green for PreTreat
-    0.47 0.65 0.90];  % blue-purple for HC
+    0.95 0.55 0.15;   % orange for PostTreat_Dun
+    0.12 0.47 0.71;   % blue for PreTreat
+    0.84 0.15 0.16;
+    0.33 0.78 0.33];  % red for HC
 
 % Collect global range for consistent x-axis and bins (PER-TRIAL)
 all_vals = [];
@@ -271,6 +272,7 @@ for gi = 1:numel(groups_for_plots)
             'FaceAlpha', 0.55);
     end
     xlim([x_min x_max]);
+    ylim([0,60])
     ylabel('Density');
     title(sprintf('%s — %s (per trial)', G, model_name), 'Interpreter','none');
     box on;
