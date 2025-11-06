@@ -18,7 +18,7 @@ t.gilbertson@dundee.ac.uk\
 https://github.com/tom-gilbertsons-lab
 
 
-Directories with key datasets highlighted ** 
+Directories with key datasets highlighted ** . Datasets (with exception of bandit gaussian walks) will not be in the github repo; find them on OSF 
 ```
 .
 ├── README.md
