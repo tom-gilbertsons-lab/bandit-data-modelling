@@ -5,10 +5,11 @@
 We use MATLAB and python. `cmdPyStan` is used for modelling (wrapped in `.ipynb` notebooks, using `joblib` for parallelisation) and have used Arviz for initial checks (however MATLAB is standard in field so structs <--> dicts throughout). 
 
 No datasets in the github repo.
-
 See OSF for data & code.
 
 #### General Notes 
+
+Code is written for [Mackenzie, Gilmour,... Gilbertson, Focused ultrasound neuromodulation of mediodorsal thalamus disrupts decision flexibility during reward learning](https://www.biorxiv.org/content/10.1101/2025.06.03.657634v1) (preprint, currently in revision) based on pipelines developed for [Gilmour, Mackenzie,.... Gilbertson, Impaired value-based decision-making in Parkinson’s disease apathy](https://doi.org/10.1093/brain/awae025). 
 
 IB: Isla Barnard\
 WG: Will Gilmour\
