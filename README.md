@@ -74,7 +74,7 @@ Datasets (dicts & structs) usually go [GROUP] × [MODEL] × [SUBJECT].
 
 
 **NB**
-Oedema paper submitted June 2025. When IB was modelling preliminary data for different project (July 2025) spotted typos in priors within Stan. Investigating these coincided with the receipt of the oedema paper review, where it was decided to split the postop data by site. IB wrote this repo based on TG & WG's work[Gilmour et.al.](https://doi.org/10.1093/brain/awae025).
+Oedema paper submitted June 2025. When IB was modelling preliminary data for different project (July 2025) spotted typos in priors within Stan. Investigating these coincided with the receipt of the oedema paper review, where it was decided to split the postop data by site. IB wrote this repo based on TG & WG's work [Gilmour et.al.](https://doi.org/10.1093/brain/awae025)
 
  
 ### Models  `./Stan`
@@ -218,6 +218,6 @@ Here, fits are in `fits/[group]/[model]/[subject]/[model_name]-YYYYMMDDHHMMSS_CH
 
 **Parameter Recovery Analysis**
 
-`simulations_stan_struct.mat` and `parameter_recovery_draws.mat` are loaded into MATLAB using `parametter_recovery.m` which calculates the means and the HDI for each simulated parameter, storing this in `param_recovery_summary_stats.mat`. There is a plotting file (ChatGPT generated) to check these in `plot_param_recovery.m`, 
+`simulations_stan_struct.mat` and `parameter_recovery_draws.mat` are loaded into MATLAB using `parametter_recovery.m` which calculates the means and the HDI for each simulated parameter, storing this in `param_recovery_summary_stats.mat`. There is a plotting file (ChatGPT generated) to check these in `plot_param_recovery.m`.
 
 

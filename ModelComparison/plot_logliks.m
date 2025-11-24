@@ -2,7 +2,7 @@
 % publication just checking as we go
 load('log_lik_all.mat','log_likelihoods');
 load('model_comparisons.mat','model_comparisons');
-% 
+%%
 % included for completeness, all chatGPT generated; not used for
 % publication just checking as we go
 load('model_comparisons.mat','model_comparisons');
@@ -280,3 +280,5 @@ end
 
 xlabel('Log-likelihood per trial (per draw)');
 sgtitle('Per-subject log-likelihood distributions (per-trial)');
+
+

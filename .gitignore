@@ -6,6 +6,9 @@
 *.code-workspace
 *.txt
 
+
+ModelComparison/Persub
+
 # Exception: keep the stimuli 
 !behavioural_data/stimuli-gaussian.mat
 
