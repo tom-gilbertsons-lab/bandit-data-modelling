@@ -1,6 +1,13 @@
 
-## Review of Behavioural Modeling for Thalamotomy Oedema (July & Oct 2025) 
+## Behavioural Modeling for Thalamotomy Oedema (July & Oct 2025) 
+
+NB this is odema_md branch, semi archived pre publication; want to add in the pstay and other metrics 
+
+
 #### Behavioural data modelling (splitting postop by site) 
+
+
+
 
 We use MATLAB and python. `cmdPyStan` is used for modelling (wrapped in `.ipynb` notebooks, using `joblib` for parallelisation) and have used Arviz for initial checks (however MATLAB is standard in field so structs <--> dicts throughout). 
 
